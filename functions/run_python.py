@@ -21,11 +21,12 @@ def run_python_file(working_directory, file_path):
         result = subprocess.run(["python", target_file], capture_output=True, text=True, timeout=30, check=True)
 
         output = []
-        output.append(f"STDOUT: {result.stdout}")
-        output.append(f"STDERR: {result.stderr}")
+        if result.stdout:
+            output.append(f"STDOUT:\n{result.stdout}")
+        if result.stderr:
+            output.append(f"STDERR:\n{result.stderr}")
     except subprocess.CalledProcessError as e:
         return f"Error: executing Python file: {e}"
     
-    if result.stdout == '':
-        return "No output produced"
-    return f"Ran {file_path} \n"+ "\n".join(output)
+    return "\n".join(output) if output else "No output produced."
+
